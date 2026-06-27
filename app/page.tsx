@@ -1,11 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { MeshGradient, DotOrbit } from "@paper-design/shaders-react"
 
 const FONT = `-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif`
 
-// ─── Icons ───────────────────────────────────────────────────────────────────
+// ─── Icons ────────────────────────────────────────────────────────────────────
 
 function IconApple() {
   return (
@@ -32,6 +32,115 @@ function IconCheck() {
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="20 6 9 17 4 12" />
     </svg>
+  )
+}
+
+// ─── Gooey Text Morph ─────────────────────────────────────────────────────────
+
+function GooeyText({
+  words,
+  morphTime = 1.2,
+  cooldownTime = 1.8,
+  style,
+}: {
+  words: string[]
+  morphTime?: number
+  cooldownTime?: number
+  style?: React.CSSProperties
+}) {
+  const text1Ref = useRef<HTMLSpanElement>(null)
+  const text2Ref = useRef<HTMLSpanElement>(null)
+  const indexRef = useRef(0)
+  const morphRef = useRef(0)
+  const cooldownRef = useRef(cooldownTime)
+  const lastTimeRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    if (text2Ref.current) {
+      text2Ref.current.textContent = words[0]
+      text2Ref.current.style.opacity = "1"
+      text2Ref.current.style.filter = ""
+    }
+    if (text1Ref.current) {
+      text1Ref.current.textContent = words[words.length - 1]
+      text1Ref.current.style.opacity = "0"
+      text1Ref.current.style.filter = ""
+    }
+    indexRef.current = 0
+    morphRef.current = 0
+    cooldownRef.current = cooldownTime
+    lastTimeRef.current = null
+
+    let frameId: number
+
+    const animate = (ts: number) => {
+      if (lastTimeRef.current === null) lastTimeRef.current = ts
+      const dt = Math.min((ts - lastTimeRef.current) / 1000, 0.05)
+      lastTimeRef.current = ts
+      cooldownRef.current -= dt
+
+      if (cooldownRef.current <= 0) {
+        morphRef.current += dt / morphTime
+
+        if (morphRef.current >= 1) {
+          indexRef.current = (indexRef.current + 1) % words.length
+          morphRef.current = 0
+          cooldownRef.current = cooldownTime
+          if (text2Ref.current) {
+            text2Ref.current.style.filter = ""
+            text2Ref.current.style.opacity = "1"
+            text2Ref.current.textContent = words[indexRef.current]
+          }
+          if (text1Ref.current) {
+            text1Ref.current.style.filter = ""
+            text1Ref.current.style.opacity = "0"
+          }
+        } else {
+          const f = morphRef.current
+          const fi = 1 - f
+          if (text1Ref.current) {
+            text1Ref.current.textContent = words[indexRef.current]
+            text1Ref.current.style.filter = `blur(${Math.min(8 / fi - 8, 100)}px)`
+            text1Ref.current.style.opacity = `${Math.pow(fi, 0.4)}`
+          }
+          if (text2Ref.current) {
+            text2Ref.current.textContent = words[(indexRef.current + 1) % words.length]
+            text2Ref.current.style.filter = `blur(${Math.min(8 / f - 8, 100)}px)`
+            text2Ref.current.style.opacity = `${Math.pow(f, 0.4)}`
+          }
+        }
+      }
+
+      frameId = requestAnimationFrame(animate)
+    }
+
+    frameId = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(frameId)
+  }, [words, morphTime, cooldownTime])
+
+  return (
+    <span
+      style={{
+        position: "relative",
+        display: "inline-block",
+        width: "100%",
+        ...style,
+      }}
+    >
+      {/* Invisible sizer — holds the line height so layout doesn't collapse */}
+      <span aria-hidden="true" style={{ visibility: "hidden", pointerEvents: "none" }}>
+        {words[0]}
+      </span>
+      <span
+        ref={text1Ref}
+        aria-hidden="true"
+        style={{ position: "absolute", top: 0, left: 0, right: 0, textAlign: "center" }}
+      />
+      <span
+        ref={text2Ref}
+        style={{ position: "absolute", top: 0, left: 0, right: 0, textAlign: "center" }}
+      />
+    </span>
   )
 }
 
@@ -74,8 +183,7 @@ const steps = [
   {
     number: "03",
     title: "Build the proof",
-    description:
-      "A photo doesn't lie. Your to-do list does. 91 days of reality — no excuses, no spin.",
+    description: "A photo doesn't lie. Your to-do list does. 91 days of reality — no excuses, no spin.",
   },
 ]
 
@@ -97,9 +205,9 @@ export default function DrishtiWaitlistPage() {
   }
 
   return (
-    <div style={{ background: "#0a0a0a", color: "#ffffff", fontFamily: FONT }}>
+    <div style={{ background: "#05081a", color: "#ffffff", fontFamily: FONT }}>
 
-      {/* ── NAV ─────────────────────────────────────────────────────────────── */}
+      {/* ── NAV ──────────────────────────────────────────────────────────────── */}
       <nav
         style={{
           position: "fixed",
@@ -111,22 +219,32 @@ export default function DrishtiWaitlistPage() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "24px 48px",
-          background: "rgba(10,10,10,0.7)",
+          background: "rgba(5,8,30,0.82)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
         }}
       >
-        <span
-          style={{
-            fontSize: "15px",
-            fontWeight: 900,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "#ffffff",
-          }}
+        <a
+          href="#"
+          style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}
         >
-          Drishti<span style={{ color: "#00d395" }}>.</span>AI
-        </span>
+          <img
+            src="/logo.png"
+            alt="Drishti"
+            style={{ width: "36px", height: "36px", objectFit: "contain", mixBlendMode: "lighten" }}
+          />
+          <span
+            style={{
+              fontSize: "15px",
+              fontWeight: 900,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "#ffffff",
+            }}
+          >
+            Drishti<span style={{ color: "#00d395" }}>.</span>AI
+          </span>
+        </a>
         <a
           href="#waitlist"
           style={{
@@ -153,7 +271,7 @@ export default function DrishtiWaitlistPage() {
         </a>
       </nav>
 
-      {/* ── HERO ────────────────────────────────────────────────────────────── */}
+      {/* ── HERO ─────────────────────────────────────────────────────────────── */}
       <section
         style={{
           position: "relative",
@@ -166,7 +284,7 @@ export default function DrishtiWaitlistPage() {
       >
         <MeshGradient
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-          colors={["#0a0a0a", "#0d2d20", "#00d395", "#0a0a0a"]}
+          colors={["#05081a", "#0d1a50", "#1a5fff", "#05081a"]}
           speed={0.4}
           distortion={0.4}
           swirl={0.2}
@@ -188,7 +306,7 @@ export default function DrishtiWaitlistPage() {
             position: "absolute",
             inset: 0,
             background:
-              "radial-gradient(ellipse 70% 70% at 50% 60%, transparent 20%, #0a0a0a 90%)",
+              "radial-gradient(ellipse 70% 70% at 50% 60%, transparent 20%, #05081a 90%)",
           }}
         />
 
@@ -234,18 +352,21 @@ export default function DrishtiWaitlistPage() {
               lineHeight: 0.9,
               letterSpacing: "-0.05em",
               color: "#ffffff",
-              marginBottom: "36px",
+              marginBottom: "156px",
             }}
           >
             Stop planning.
             <br />
-            <span style={{ color: "#00d395" }}>Start proving.</span>
+            <GooeyText
+              words={["Start proving.", "Start showing up.", "Start being real."]}
+              style={{ color: "#00d395" }}
+            />
           </h1>
 
           <p
             style={{
               fontSize: "clamp(15px, 2vw, 18px)",
-              color: "#6a6a6a",
+              color: "#aaaaaa",
               lineHeight: 1.7,
               maxWidth: "460px",
               margin: "0 auto 52px",
@@ -287,8 +408,8 @@ export default function DrishtiWaitlistPage() {
         </div>
       </section>
 
-      {/* ── PROOF STRIP ─────────────────────────────────────────────────────── */}
-      <div style={{ borderTop: "1px solid #1a1a1a", borderBottom: "1px solid #1a1a1a" }}>
+      {/* ── PROOF STRIP ──────────────────────────────────────────────────────── */}
+      <div>
         <div
           style={{
             maxWidth: "900px",
@@ -371,10 +492,36 @@ export default function DrishtiWaitlistPage() {
             maxWidth: "680px",
           }}
         >
-          You have 12 productivity apps.
+          Every resource you need exists.
+          <br />Every tool is at your fingertips.
+          <br />Every answer is one Google search away.
           <br />
-          <span style={{ color: "#333333" }}>You still didn't do the thing.</span>
+          <span style={{ color: "#2e2e2e" }}>So why aren't you where you want to be?</span>
         </h2>
+
+        <p
+          style={{
+            fontSize: "clamp(15px, 1.8vw, 18px)",
+            color: "#4a4a4a",
+            lineHeight: 1.7,
+            maxWidth: "600px",
+            marginBottom: "28px",
+          }}
+        >
+          Because information without action is just expensive procrastination.
+        </p>
+
+        <p
+          style={{
+            fontSize: "clamp(18px, 2.5vw, 28px)",
+            fontWeight: 800,
+            letterSpacing: "-0.03em",
+            color: "#00d395",
+            marginBottom: "80px",
+          }}
+        >
+          Stop optimizing. Start executing.
+        </p>
 
         <div
           style={{
@@ -385,34 +532,7 @@ export default function DrishtiWaitlistPage() {
           }}
         >
           {manifesto.map((line, i) => (
-            <div
-              key={i}
-              style={{
-                padding: "32px 0 32px 28px",
-                borderLeft: "1px solid #1e1e1e",
-                borderBottom: i < manifesto.length - 1 ? "none" : undefined,
-                transition: "border-color 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                ;(e.currentTarget as HTMLDivElement).style.borderLeftColor = "#00d395"
-              }}
-              onMouseLeave={(e) => {
-                ;(e.currentTarget as HTMLDivElement).style.borderLeftColor = "#1e1e1e"
-              }}
-            >
-              <p
-                style={{
-                  fontSize: "clamp(16px, 2vw, 20px)",
-                  lineHeight: 1.6,
-                  color: "#4a4a4a",
-                  margin: 0,
-                }}
-              >
-                <span style={{ color: "#ffffff", fontWeight: 800 }}>{line.stop} </span>
-                <span style={{ color: "#00d395", fontWeight: 700 }}>{line.start} </span>
-                {line.rest}
-              </p>
-            </div>
+            <ManifestoLine key={i} line={line} />
           ))}
         </div>
       </section>
@@ -423,8 +543,6 @@ export default function DrishtiWaitlistPage() {
           position: "relative",
           height: "300px",
           overflow: "hidden",
-          borderTop: "1px solid #1a1a1a",
-          borderBottom: "1px solid #1a1a1a",
         }}
       >
         <DotOrbit
@@ -457,7 +575,7 @@ export default function DrishtiWaitlistPage() {
           >
             Stop telling yourself you're productive.
             <br />
-            <span style={{ color: "#00d395" }}>Let your camera roll decide.</span>
+            <span style={{ color: "#00d395" }}>Let Drishti AI decide.</span>
           </p>
         </div>
       </div>
@@ -516,7 +634,6 @@ export default function DrishtiWaitlistPage() {
         id="waitlist"
         style={{
           padding: "140px 24px",
-          borderTop: "1px solid #1a1a1a",
         }}
       >
         <div style={{ maxWidth: "480px", margin: "0 auto", textAlign: "center" }}>
@@ -558,7 +675,6 @@ export default function DrishtiWaitlistPage() {
           {submitted ? (
             <div
               style={{
-                border: "1px solid #1e3d2a",
                 borderRadius: "16px",
                 padding: "40px 32px",
                 display: "flex",
@@ -666,7 +782,6 @@ export default function DrishtiWaitlistPage() {
         style={{
           padding: "140px 24px",
           textAlign: "center",
-          borderTop: "1px solid #1a1a1a",
         }}
       >
         <p
@@ -717,7 +832,6 @@ export default function DrishtiWaitlistPage() {
       {/* ── FOOTER ───────────────────────────────────────────────────────────── */}
       <footer
         style={{
-          borderTop: "1px solid #1a1a1a",
           padding: "40px 48px",
           display: "flex",
           alignItems: "center",
@@ -762,6 +876,34 @@ export default function DrishtiWaitlistPage() {
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
+function ManifestoLine({ line }: { line: typeof manifesto[0] }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div
+      style={{
+        padding: "32px 0",
+        transition: "opacity 0.2s",
+        opacity: hovered ? 1 : 0.85,
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <p
+        style={{
+          fontSize: "clamp(16px, 2vw, 20px)",
+          lineHeight: 1.6,
+          color: "#4a4a4a",
+          margin: 0,
+        }}
+      >
+        <span style={{ color: "#ffffff", fontWeight: 800 }}>{line.stop} </span>
+        <span style={{ color: "#00d395", fontWeight: 700 }}>{line.start} </span>
+        {line.rest}
+      </p>
+    </div>
+  )
+}
+
 function StepCard({
   number,
   title,
@@ -777,7 +919,6 @@ function StepCard({
     <div
       style={{
         padding: "48px 40px 48px 0",
-        borderTop: "1px solid #1a1a1a",
         position: "relative",
       }}
     >
