@@ -205,7 +205,7 @@ export default function DrishtiWaitlistPage() {
   }
 
   return (
-    <div style={{ background: "#05081a", color: "#ffffff", fontFamily: FONT }}>
+    <div style={{ background: "#0a0a0a", color: "#ffffff", fontFamily: FONT }}>
 
       {/* ── NAV ──────────────────────────────────────────────────────────────── */}
       <nav
@@ -219,7 +219,7 @@ export default function DrishtiWaitlistPage() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "24px 48px",
-          background: "rgba(5,8,30,0.82)",
+          background: "rgba(10,10,10,0.7)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
         }}
@@ -306,7 +306,7 @@ export default function DrishtiWaitlistPage() {
             position: "absolute",
             inset: 0,
             background:
-              "radial-gradient(ellipse 70% 70% at 50% 60%, transparent 20%, #05081a 90%)",
+              "radial-gradient(ellipse 70% 70% at 50% 60%, transparent 20%, #0a0a0a 90%)",
           }}
         />
 
@@ -372,9 +372,9 @@ export default function DrishtiWaitlistPage() {
               margin: "0 auto 52px",
             }}
           >
-            Your schedule means nothing until you show up for it. Five minutes
-            into every block, your phone goes off. One job: take the photo.
-            Prove you're actually doing it.
+            Plans are cheap. Proof isn't. Five minutes into every block, your
+            phone asks one question: are you actually there? One photo. No
+            excuses; Just proof.
           </p>
 
           <a
