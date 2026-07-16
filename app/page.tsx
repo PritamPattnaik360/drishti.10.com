@@ -190,18 +190,39 @@ const steps = [
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function DrishtiWaitlistPage() {
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!firstName.trim() || !lastName.trim()) {
+      setError("Please enter your first and last name.")
+      return
+    }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError("Please enter a valid email address.")
       return
     }
     setError("")
-    setSubmitted(true)
+    setLoading(true)
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firstName: firstName.trim(), lastName: lastName.trim(), email }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "Something went wrong.")
+      setSubmitted(true)
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -377,34 +398,6 @@ export default function DrishtiWaitlistPage() {
             excuses; Just proof.
           </p>
 
-          <a
-            href="#waitlist"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              background: "#00d395",
-              color: "#0a0a0a",
-              fontWeight: 700,
-              fontSize: "14px",
-              letterSpacing: "0.01em",
-              padding: "16px 36px",
-              borderRadius: "100px",
-              textDecoration: "none",
-              transition: "transform 0.2s, opacity 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-2px)"
-              e.currentTarget.style.opacity = "0.88"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)"
-              e.currentTarget.style.opacity = "1"
-            }}
-          >
-            Get Early Access
-            <span style={{ opacity: 0.7 }}>→</span>
-          </a>
         </div>
       </section>
 
@@ -629,6 +622,9 @@ export default function DrishtiWaitlistPage() {
         </div>
       </section>
 
+      {/* ── PHONE SHOWCASE ───────────────────────────────────────────────────── */}
+      <PhoneShowcase />
+
       {/* ── WAITLIST FORM ────────────────────────────────────────────────────── */}
       <section
         id="waitlist"
@@ -699,7 +695,7 @@ export default function DrishtiWaitlistPage() {
                 <IconCheck />
               </div>
               <p style={{ fontWeight: 800, fontSize: "17px", color: "#ffffff", letterSpacing: "-0.02em" }}>
-                You're on the list.
+                You're on the list, {firstName}.
               </p>
               <p style={{ color: "#4a4a4a", fontSize: "13px" }}>
                 We'll send a ping to {email} when we launch.
@@ -714,6 +710,50 @@ export default function DrishtiWaitlistPage() {
                   gap: "12px",
                 }}
               >
+                <div style={{ display: "flex", gap: "12px" }}>
+                  <input
+                    type="text"
+                    name="firstName"
+                    placeholder="First name"
+                    value={firstName}
+                    onChange={(e) => { setFirstName(e.target.value); setError("") }}
+                    required
+                    style={{
+                      flex: 1,
+                      background: "#111111",
+                      border: error ? "1px solid #ff4d4f" : "1px solid #1e1e1e",
+                      borderRadius: "12px",
+                      padding: "18px 20px",
+                      fontSize: "15px",
+                      color: "#ffffff",
+                      outline: "none",
+                      transition: "border-color 0.15s",
+                    }}
+                    onFocus={(e) => { if (!error) e.target.style.borderColor = "#00d395" }}
+                    onBlur={(e) => { if (!error) e.target.style.borderColor = "#1e1e1e" }}
+                  />
+                  <input
+                    type="text"
+                    name="lastName"
+                    placeholder="Last name"
+                    value={lastName}
+                    onChange={(e) => { setLastName(e.target.value); setError("") }}
+                    required
+                    style={{
+                      flex: 1,
+                      background: "#111111",
+                      border: error ? "1px solid #ff4d4f" : "1px solid #1e1e1e",
+                      borderRadius: "12px",
+                      padding: "18px 20px",
+                      fontSize: "15px",
+                      color: "#ffffff",
+                      outline: "none",
+                      transition: "border-color 0.15s",
+                    }}
+                    onFocus={(e) => { if (!error) e.target.style.borderColor = "#00d395" }}
+                    onBlur={(e) => { if (!error) e.target.style.borderColor = "#1e1e1e" }}
+                  />
+                </div>
                 <input
                   type="email"
                   name="email"
@@ -745,6 +785,7 @@ export default function DrishtiWaitlistPage() {
                 />
                 <button
                   type="submit"
+                  disabled={loading}
                   style={{
                     width: "100%",
                     background: "#00d395",
@@ -755,13 +796,14 @@ export default function DrishtiWaitlistPage() {
                     padding: "18px",
                     borderRadius: "12px",
                     border: "none",
-                    cursor: "pointer",
+                    cursor: loading ? "not-allowed" : "pointer",
+                    opacity: loading ? 0.6 : 1,
                     transition: "opacity 0.15s",
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                  onMouseEnter={(e) => { if (!loading) e.currentTarget.style.opacity = "0.85" }}
+                  onMouseLeave={(e) => { if (!loading) e.currentTarget.style.opacity = "1" }}
                 >
-                  I'm In →
+                  {loading ? "Joining…" : "I'm In →"}
                 </button>
               </div>
               {error && (
@@ -875,6 +917,144 @@ export default function DrishtiWaitlistPage() {
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
+
+// ─── Phone Showcase ───────────────────────────────────────────────────────────
+
+function PhoneShowcase() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisible(true) },
+      { threshold: 0.15 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  const phones = [
+    {
+      src: "/app-schedule.png",
+      label: "Schedule your blocks",
+      sub: "Name the task. Set the time. Mean it.",
+      from: "translateX(-80px)",
+      delay: "0s",
+    },
+    {
+      src: "/app-home.png",
+      label: "Answer the check-in",
+      sub: "Five minutes in, we ask: are you there?",
+      from: "translateY(80px)",
+      delay: "0.18s",
+    },
+    {
+      src: "/app-metrics.png",
+      label: "See your proof",
+      sub: "91 days of reality. No excuses.",
+      from: "translateX(80px)",
+      delay: "0.36s",
+    },
+  ]
+
+  return (
+    <section style={{ padding: "140px 24px", maxWidth: "1100px", margin: "0 auto" }}>
+      <p
+        style={{
+          fontSize: "11px",
+          fontWeight: 700,
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: "#00d395",
+          marginBottom: "20px",
+          textAlign: "center",
+        }}
+      >
+        The app
+      </p>
+      <h2
+        style={{
+          fontSize: "clamp(30px, 4.5vw, 48px)",
+          fontWeight: 900,
+          letterSpacing: "-0.04em",
+          lineHeight: 1.05,
+          color: "#ffffff",
+          marginBottom: "80px",
+          textAlign: "center",
+        }}
+      >
+        Proof lives in your pocket.
+      </h2>
+
+      <div
+        ref={containerRef}
+        style={{
+          display: "flex",
+          gap: "40px",
+          justifyContent: "center",
+          alignItems: "flex-end",
+          flexWrap: "wrap",
+        }}
+      >
+        {phones.map((phone) => (
+          <div
+            key={phone.label}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "28px",
+              transform: visible ? "translate(0,0)" : phone.from,
+              opacity: visible ? 1 : 0,
+              transition: `transform 0.9s cubic-bezier(0.22,1,0.36,1) ${phone.delay}, opacity 0.9s ease ${phone.delay}`,
+            }}
+          >
+            <div
+              style={{
+                borderRadius: "44px",
+                overflow: "hidden",
+                boxShadow:
+                  "0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.07)",
+                width: "240px",
+                background: "#111",
+              }}
+            >
+              <img
+                src={phone.src}
+                alt={phone.label}
+                style={{ width: "100%", display: "block" }}
+              />
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <p
+                style={{
+                  fontSize: "15px",
+                  fontWeight: 700,
+                  color: "#ffffff",
+                  marginBottom: "6px",
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                {phone.label}
+              </p>
+              <p style={{ fontSize: "13px", color: "#4a4a4a", lineHeight: 1.6 }}>
+                {phone.sub}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <style>{`
+        @media (max-width: 600px) {
+          .phone-row { flex-direction: column; align-items: center; }
+        }
+      `}</style>
+    </section>
+  )
+}
 
 function ManifestoLine({ line }: { line: typeof manifesto[0] }) {
   const [hovered, setHovered] = useState(false)
