@@ -5,6 +5,9 @@ import { MeshGradient, DotOrbit } from "@paper-design/shaders-react"
 
 const FONT = `-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif`
 
+const WAITLIST_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbzeczFttniPE7_xFFd80DFkY5QuJznxaV_DjAWmODlDBn2MOu1njfPayovNJb1_LDU/exec"
+
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
 function IconApple() {
@@ -210,16 +213,19 @@ export default function DrishtiWaitlistPage() {
     setError("")
     setLoading(true)
     try {
-      const res = await fetch("/api/waitlist", {
+      // GitHub Pages only serves static files, so this can't go through a
+      // Next.js API route — it posts to the Apps Script web app directly.
+      // text/plain avoids a CORS preflight (Apps Script doesn't handle
+      // OPTIONS requests), and the script still JSON.parses the body.
+      await fetch(WAITLIST_SCRIPT_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({ firstName: firstName.trim(), lastName: lastName.trim(), email }),
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || "Something went wrong.")
       setSubmitted(true)
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Something went wrong.")
+    } catch {
+      setError("Something went wrong. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -250,7 +256,7 @@ export default function DrishtiWaitlistPage() {
           style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}
         >
           <img
-            src="/logo.png"
+            src="logo.png"
             alt="Drishti"
             style={{ width: "36px", height: "36px", objectFit: "contain", mixBlendMode: "lighten" }}
           />
@@ -937,21 +943,21 @@ function PhoneShowcase() {
 
   const phones = [
     {
-      src: "/app-schedule.png",
+      src: "app-schedule.png",
       label: "Schedule your blocks",
       sub: "Name the task. Set the time. Mean it.",
       from: "translateX(-80px)",
       delay: "0s",
     },
     {
-      src: "/app-home.png",
+      src: "app-home.png",
       label: "Answer the check-in",
       sub: "Five minutes in, we ask: are you there?",
       from: "translateY(80px)",
       delay: "0.18s",
     },
     {
-      src: "/app-metrics.png",
+      src: "app-metrics.png",
       label: "See your proof",
       sub: "91 days of reality. No excuses.",
       from: "translateX(80px)",
