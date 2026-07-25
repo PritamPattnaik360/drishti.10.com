@@ -269,7 +269,7 @@ export default function DrishtiWaitlistPage() {
               color: "#ffffff",
             }}
           >
-            Drishti<span style={{ color: "#00d395" }}>.</span>AI
+            Drishti<span style={{ color: "#00d395" }}>.</span>10
           </span>
         </a>
         <a
@@ -574,7 +574,7 @@ export default function DrishtiWaitlistPage() {
           >
             Stop telling yourself you're productive.
             <br />
-            <span style={{ color: "#00d395" }}>Let Drishti AI decide.</span>
+            <span style={{ color: "#00d395" }}>Let Drishti.10 decide.</span>
           </p>
         </div>
       </div>
@@ -899,14 +899,14 @@ export default function DrishtiWaitlistPage() {
               marginBottom: "4px",
             }}
           >
-            Drishti<span style={{ color: "#00d395" }}>.</span>AI
+            Drishti<span style={{ color: "#00d395" }}>.</span>10
           </p>
           <p style={{ color: "#2a2a2a", fontSize: "12px" }}>
             Stop planning. Start proving.
           </p>
         </div>
         <p style={{ color: "#222222", fontSize: "12px" }}>
-          © {new Date().getFullYear()} Drishti AI. All rights reserved.
+          © {new Date().getFullYear()} Drishti.10. All rights reserved.
         </p>
       </footer>
 
