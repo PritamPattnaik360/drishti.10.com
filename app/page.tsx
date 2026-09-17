@@ -272,30 +272,47 @@ export default function DrishtiWaitlistPage() {
             Drishti<span style={{ color: "#00d395" }}>.</span>10
           </span>
         </a>
-        <a
-          href="#waitlist"
-          style={{
-            color: "#ffffff",
-            fontWeight: 600,
-            fontSize: "13px",
-            letterSpacing: "0.01em",
-            padding: "9px 20px",
-            borderRadius: "100px",
-            border: "1px solid #2a2a2a",
-            textDecoration: "none",
-            transition: "border-color 0.15s, color 0.15s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = "#00d395"
-            e.currentTarget.style.color = "#00d395"
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = "#2a2a2a"
-            e.currentTarget.style.color = "#ffffff"
-          }}
-        >
-          Join Waitlist
-        </a>
+        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <a
+            href="privacy"
+            style={{
+              color: "#6a6a6a",
+              fontWeight: 600,
+              fontSize: "13px",
+              letterSpacing: "0.01em",
+              textDecoration: "none",
+              transition: "color 0.15s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "#00d395" }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "#6a6a6a" }}
+          >
+            Privacy
+          </a>
+          <a
+            href="#waitlist"
+            style={{
+              color: "#ffffff",
+              fontWeight: 600,
+              fontSize: "13px",
+              letterSpacing: "0.01em",
+              padding: "9px 20px",
+              borderRadius: "100px",
+              border: "1px solid #2a2a2a",
+              textDecoration: "none",
+              transition: "border-color 0.15s, color 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "#00d395"
+              e.currentTarget.style.color = "#00d395"
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "#2a2a2a"
+              e.currentTarget.style.color = "#ffffff"
+            }}
+          >
+            Join Waitlist
+          </a>
+        </div>
       </nav>
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
