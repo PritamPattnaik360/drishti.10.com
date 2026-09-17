@@ -905,9 +905,17 @@ export default function DrishtiWaitlistPage() {
             Stop planning. Start proving.
           </p>
         </div>
-        <p style={{ color: "#222222", fontSize: "12px" }}>
-          © {new Date().getFullYear()} Drishti.10. All rights reserved.
-        </p>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px" }}>
+          <p style={{ color: "#222222", fontSize: "12px" }}>
+            © {new Date().getFullYear()} Drishti.10. All rights reserved.
+          </p>
+          <a
+            href="privacy"
+            style={{ color: "#4a4a4a", fontSize: "12px", textDecoration: "none" }}
+          >
+            Privacy Policy
+          </a>
+        </div>
       </footer>
 
       <style>{`
