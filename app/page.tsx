@@ -289,6 +289,21 @@ export default function DrishtiWaitlistPage() {
             Privacy
           </a>
           <a
+            href="delete-account"
+            style={{
+              color: "#6a6a6a",
+              fontWeight: 600,
+              fontSize: "13px",
+              letterSpacing: "0.01em",
+              textDecoration: "none",
+              transition: "color 0.15s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "#00d395" }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "#6a6a6a" }}
+          >
+            Delete Account
+          </a>
+          <a
             href="#waitlist"
             style={{
               color: "#ffffff",
