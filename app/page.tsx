@@ -289,6 +289,21 @@ export default function DrishtiWaitlistPage() {
             Privacy
           </a>
           <a
+            href="terms"
+            style={{
+              color: "#6a6a6a",
+              fontWeight: 600,
+              fontSize: "13px",
+              letterSpacing: "0.01em",
+              textDecoration: "none",
+              transition: "color 0.15s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "#00d395" }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "#6a6a6a" }}
+          >
+            Terms
+          </a>
+          <a
             href="delete-account"
             style={{
               color: "#6a6a6a",
@@ -946,6 +961,18 @@ export default function DrishtiWaitlistPage() {
             style={{ color: "#4a4a4a", fontSize: "12px", textDecoration: "none" }}
           >
             Privacy Policy
+          </a>
+          <a
+            href="terms"
+            style={{ color: "#4a4a4a", fontSize: "12px", textDecoration: "none" }}
+          >
+            Terms of Service
+          </a>
+          <a
+            href="delete-account"
+            style={{ color: "#4a4a4a", fontSize: "12px", textDecoration: "none" }}
+          >
+            Delete Account
           </a>
         </div>
       </footer>

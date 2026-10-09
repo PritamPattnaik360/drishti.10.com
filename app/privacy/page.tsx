@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 
 const FONT = `-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif`
 const CONTACT_EMAIL = "drishtiai10@gmail.com"
-const EFFECTIVE_DATE = "September 17, 2026"
+const EFFECTIVE_DATE = "October 2, 2026"
 
 export const metadata: Metadata = {
   title: "Privacy Policy — Drishti.10",
@@ -181,6 +181,18 @@ export default function PrivacyPolicyPage() {
               <strong style={{ color: "#ffffff" }}>Sign-in providers</strong> (Google, Apple) if
               you choose to authenticate through them.
             </li>
+            <li style={{ marginBottom: "12px" }}>
+              <strong style={{ color: "#ffffff" }}>Payment and subscription providers</strong>{" "}
+              (Stripe for web payments, RevenueCat, and Apple/Google for in-app purchases) to
+              process and verify Drishti Pro subscriptions. We do not receive or store your full
+              card number.
+            </li>
+            <li style={{ marginBottom: "12px" }}>
+              <strong style={{ color: "#ffffff" }}>Advertising providers.</strong> Free accounts
+              may see ads served by Google AdMob, which may collect device identifiers and
+              usage data under Google&rsquo;s own policy. Where required, we ask for your consent
+              first. Pro subscribers do not see ads.
+            </li>
             <li>
               <strong style={{ color: "#ffffff" }}>Legal and safety reasons</strong>, such as to
               comply with applicable law, respond to lawful requests, or protect the rights,
@@ -192,8 +204,10 @@ export default function PrivacyPolicyPage() {
         <Section title="4. Data Retention">
           <p>
             We retain account, schedule, and check-in data for as long as your account is active
-            or as needed to provide the Service. If you delete your account, we delete or
-            anonymize your personal information within a reasonable time, except where retention
+            or as needed to provide the Service. Check-in photos are automatically deleted after
+            90 days. If you delete your account, we delete your profile, schedules, check-ins,
+            photos, and push tokens, and cancel any active web (Stripe) subscription; backups may
+            hold copies for up to 30 further days. We may keep limited records where retention
             is required for legal, security, or backup purposes. Waitlist information is retained
             until the App launches or until you ask us to remove it, whichever comes first.
           </p>
@@ -204,8 +218,13 @@ export default function PrivacyPolicyPage() {
             <li style={{ marginBottom: "12px" }}>You can access and update your profile information from within the App.</li>
             <li style={{ marginBottom: "12px" }}>You can delete individual check-ins and photos from your history in the App.</li>
             <li style={{ marginBottom: "12px" }}>
-              You can request deletion of your account and associated data, or ask what
-              information we hold about you, by emailing{" "}
+              You can delete your account and all associated data yourself in the App (Profile →
+              Account → Delete Account), or see{" "}
+              <a href="delete-account" style={{ color: "#00d395" }}>Delete Account</a> for all options.
+            </li>
+            <li style={{ marginBottom: "12px" }}>
+              You can also ask what information we hold about you, or request deletion by email,
+              by contacting{" "}
               <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: "#00d395" }}>
                 {CONTACT_EMAIL}
               </a>.
@@ -265,6 +284,9 @@ export default function PrivacyPolicyPage() {
           </p>
         </Section>
 
+        <a href="terms" style={{ color: "#4a4a4a", fontSize: "13px", textDecoration: "none", marginRight: "24px" }}>
+          Terms of Service
+        </a>
         <a
           href="./"
           style={{

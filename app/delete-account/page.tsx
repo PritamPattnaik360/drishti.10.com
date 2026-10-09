@@ -61,9 +61,18 @@ export default function DeleteAccountPage() {
           {APP_NAME} Account Deletion
         </h1>
 
-        <Section title="How to request deletion">
+        <Section title="Option 1: Delete in the app (instant)">
+          <ol style={{ paddingLeft: "20px" }}>
+            <li style={{ marginBottom: "8px" }}>Open {APP_NAME} and go to the Profile tab.</li>
+            <li style={{ marginBottom: "8px" }}>Scroll to the Account section and tap Delete Account.</li>
+            <li>Confirm twice. Your account and data are deleted immediately and you are signed out.</li>
+          </ol>
+        </Section>
+
+        <Section title="Option 2: Request deletion by email">
           <p style={{ marginBottom: "16px" }}>
-            To request deletion of your {APP_NAME} account and associated data:
+            If you can&rsquo;t access the app, request deletion of your {APP_NAME} account and
+            associated data:
           </p>
           <ol style={{ paddingLeft: "20px" }}>
             <li style={{ marginBottom: "8px" }}>
@@ -87,6 +96,15 @@ export default function DeleteAccountPage() {
             <li>Your schedules, tasks, check-in history, and productivity scores</li>
             <li>Your push notification token</li>
           </ul>
+        </Section>
+
+        <Section title="Subscriptions">
+          <p>
+            Deleting your account cancels any active web (Stripe) subscription. Subscriptions
+            bought through the Apple App Store or Google Play can&rsquo;t be cancelled by us —
+            cancel them in your App Store or Play Store subscription settings to avoid further
+            charges.
+          </p>
         </Section>
 
         <Section title="What may be retained">
